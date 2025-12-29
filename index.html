@@ -4,25 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acronym Architect</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #2563eb; /* Modern Blue */
-            --dark: #1e293b;
+            --primary: #2563eb;
+            --dark: #0f172a;
             --light: #f8fafc;
             --white: #ffffff;
-            --accent: #f59e0b; /* Amber for highlights */
+            --accent: #f59e0b;
+            --glass: rgba(255, 255, 255, 0.95);
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--light);
+            color: var(--dark);
             margin: 0;
             padding: 0;
-            background-color: var(--light);
-            color: var(--dark);
             overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* --- 1. INTRO MOTION GRAPHIC --- */
+        /* --- 1. INTRO ANIMATION --- */
         #intro-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -33,236 +38,134 @@
             justify-content: center;
             align-items: center;
             color: white;
-            animation: fadeOut 1s ease-in-out 3s forwards;
-            pointer-events: none; /* Allows click through after fade */
+            animation: fadeOut 1s ease-in-out 2.5s forwards;
+            pointer-events: none;
         }
 
-        .intro-title {
-            font-size: 3rem;
-            font-weight: bold;
-            opacity: 0;
-            animation: slideUp 0.8s ease-out 0.5s forwards;
-        }
-
-        .intro-sub {
-            font-size: 1.2rem;
-            margin-top: 10px;
-            opacity: 0;
-            color: #94a3b8;
-            animation: fadeIn 0.8s ease-out 1.2s forwards;
-        }
+        .intro-title { font-size: 2.5rem; font-weight: 800; opacity: 0; animation: slideUp 0.8s ease-out 0.5s forwards; }
+        .intro-sub { font-size: 1rem; color: #94a3b8; margin-top: 10px; opacity: 0; animation: fadeIn 1s ease-out 1.2s forwards; }
 
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes fadeOut { 90% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
 
-        /* --- 2. HEADER & MENU --- */
+        /* --- 2. HEADER --- */
         header {
             background: var(--white);
             padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
             position: sticky;
             top: 0;
             z-index: 100;
         }
+        .logo-area { font-weight: 800; color: var(--primary); font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
+        .logo-icon { width: 30px; height: 30px; background: #e2e8f0; border-radius: 6px; }
 
-        .logo-placeholder {
-            width: 40px;
-            height: 40px;
-            background: #e2e8f0;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            color: #64748b;
-            font-weight: bold;
+        /* --- 3. HOME GRID (2x2) --- */
+        .main-container { max-width: 800px; margin: 40px auto; padding: 20px; flex-grow: 1; }
+        
+        .grid-menu {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            animation: fadeIn 1s ease-out 3s forwards; /* Waits for intro */
         }
 
-        .app-name {
-            font-size: 1.2rem;
-            font-weight: 800;
-            color: var(--primary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .menu-btn {
-            font-size: 1.5rem;
-            cursor: pointer;
-            background: none;
-            border: none;
-            color: var(--dark);
-        }
-
-        /* Sidebar Menu */
-        #sidebar {
-            position: fixed;
-            top: 0; right: -250px;
-            width: 250px;
-            height: 100%;
-            background: var(--dark);
-            color: white;
-            transition: right 0.3s ease;
-            z-index: 200;
-            padding-top: 60px;
-            box-shadow: -5px 0 15px rgba(0,0,0,0.2);
-        }
-
-        #sidebar.active { right: 0; }
-
-        #sidebar a {
-            padding: 15px 25px;
-            text-decoration: none;
-            font-size: 1.1rem;
-            color: #cbd5e1;
-            display: block;
-            transition: 0.2s;
-            border-bottom: 1px solid #334155;
-        }
-
-        #sidebar a:hover { background: var(--primary); color: white; }
-
-        .close-btn {
-            position: absolute;
-            top: 15px; right: 20px;
-            font-size: 2rem;
-            cursor: pointer;
-            color: white;
-        }
-
-        /* --- 3. MAIN INTERFACE --- */
-        .container {
-            max-width: 600px;
-            margin: 30px auto;
-            padding: 20px;
+        .menu-card {
             background: var(--white);
+            padding: 40px 20px;
             border-radius: 16px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-
-        .input-group { margin-bottom: 20px; }
-
-        label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #475569;
-            font-size: 0.9rem;
-        }
-
-        input[type="text"], select {
-            width: 100%;
-            padding: 14px;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            font-size: 1rem;
-            box-sizing: border-box;
-            transition: 0.3s;
-            background: #f8fafc;
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: white;
-        }
-
-        /* Buttons */
-        .btn {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.1s;
-        }
-
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-secondary { background: var(--dark); color: white; margin-top: 15px;}
-        .btn:hover { opacity: 0.9; }
-        .btn:active { transform: scale(0.98); }
-
-        /* --- 4. RESULTS SECTION --- */
-        #results-area { display: none; margin-top: 30px; }
-
-        /* Matrix Table */
-        .table-wrapper {
-            overflow-x: auto;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-
-        table { width: 100%; border-collapse: collapse; min-width: 400px; }
-        
-        td { padding: 12px; vertical-align: top; border-bottom: 1px solid #f1f5f9; }
-        
-        .letter-col {
-            width: 50px;
-            background: #eff6ff;
-            color: var(--primary);
-            font-weight: 800;
             text-align: center;
-            font-size: 1.2rem;
-        }
-
-        .word-chip {
-            display: inline-block;
-            background: white;
-            border: 1px solid #cbd5e1;
-            padding: 5px 10px;
-            margin: 3px;
-            border-radius: 20px;
-            font-size: 0.85rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             cursor: pointer;
-            color: #475569;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
         }
 
-        .word-chip:hover { border-color: var(--primary); color: var(--primary); }
-        .word-chip.selected {
-            background: var(--primary);
-            color: white;
+        .menu-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(37, 99, 235, 0.15);
             border-color: var(--primary);
-            box-shadow: 0 2px 5px rgba(37, 99, 235, 0.3);
         }
 
-        /* Selected Sentence Display */
-        .sentence-display {
+        .card-icon { font-size: 2rem; color: var(--primary); margin-bottom: 15px; }
+        .card-title { font-weight: 700; font-size: 1.1rem; }
+
+        /* --- 4. TOOL INTERFACE (Hidden by default) --- */
+        .tool-section { display: none; background: var(--white); padding: 30px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); position: relative; }
+        .back-btn { position: absolute; top: 20px; left: 20px; cursor: pointer; color: #64748b; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+        .tool-header { text-align: center; margin-bottom: 30px; font-size: 1.5rem; font-weight: 800; color: var(--dark); }
+
+        /* Inputs & Buttons */
+        .input-group { margin-bottom: 20px; }
+        label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 8px; color: #475569; }
+        input, select, textarea { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1rem; box-sizing: border-box; font-family: inherit; }
+        input:focus { outline: none; border-color: var(--primary); }
+
+        .btn { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn:hover { background: #1d4ed8; }
+
+        /* Display Box */
+        .display-box {
             background: var(--dark);
             color: white;
             padding: 20px;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            line-height: 1.6;
-            text-align: center;
+            border-radius: 8px;
+            margin-top: 20px;
+            position: relative;
             min-height: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 10px;
-        }
-
-        /* --- 5. FOOTER --- */
-        footer {
             text-align: center;
-            padding: 30px;
-            margin-top: 20px;
-            font-size: 0.9rem;
-            color: #94a3b8;
+            font-size: 1.1rem;
+            line-height: 1.5;
         }
 
-        footer a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: bold;
+        .action-icons {
+            position: absolute;
+            top: 10px; right: 10px;
+            display: flex;
+            gap: 10px;
         }
 
+        .icon-btn { color: rgba(255,255,255,0.7); cursor: pointer; transition: 0.2s; }
+        .icon-btn:hover { color: white; transform: scale(1.1); }
+
+        /* --- 5. FAVORITES & SHARE --- */
+        .section-title { font-weight: 700; color: #64748b; margin: 40px 0 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+        
+        .fav-list { display: flex; flex-direction: column; gap: 10px; }
+        .fav-item { background: white; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .fav-text { font-weight: 500; }
+        .delete-btn { color: #ef4444; cursor: pointer; }
+
+        .share-row { display: flex; gap: 15px; justify-content: center; margin-top: 20px; }
+        .social-btn { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; text-decoration: none; transition: transform 0.2s; }
+        .social-btn:hover { transform: translateY(-3px); }
+        .bg-fb { background: #1877F2; }
+        .bg-x { background: #000000; }
+        .bg-ig { background: #E1306C; }
+        .bg-tg { background: #0088cc; }
+        .bg-cp { background: #64748b; cursor: pointer; }
+
+        /* Footer */
+        footer { text-align: center; padding: 30px; color: #94a3b8; font-size: 0.9rem; margin-top: auto; }
+        footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
+
+        /* Matrix Table styles for Acronym Tool */
+        .word-chip { display: inline-block; padding: 4px 8px; margin: 2px; background: #f1f5f9; border-radius: 4px; font-size: 0.8rem; cursor: pointer; }
+        .word-chip.selected { background: var(--primary); color: white; }
+        .matrix-container { overflow-x: auto; margin-top: 20px; border: 1px solid #e2e8f0; border-radius: 8px; }
+        table { width: 100%; border-collapse: collapse; }
+        td { padding: 8px; border-bottom: 1px solid #f1f5f9; }
+
+        @media (max-width: 600px) {
+            .grid-menu { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -272,222 +175,362 @@
         <div class="intro-sub">powered by Webbuddy</div>
     </div>
 
-    <div id="sidebar">
-        <span class="close-btn" onclick="toggleMenu()">&times;</span>
-        <a href="#">Favourite</a>
-        <a href="#">ProDictionary</a>
-        <a href="#">Keywords</a>
-        <a href="#">Snippets</a>
-        <a href="#">Upgrade</a>
-        <a href="#">About</a>
-    </div>
-
     <header>
-        <div class="logo-placeholder">LOGO</div>
-        <div class="app-name">Acronym Architect</div>
-        <button class="menu-btn" onclick="toggleMenu()">&#9776;</button>
+        <div class="logo-area">
+            <div class="logo-icon"></div> &nbsp; Acronym Architect
+        </div>
     </header>
 
-    <div class="container">
-        
-        <div class="input-group">
-            <label>Word / Letters</label>
-            <input type="text" id="acronymInput" placeholder="type in letters" value="">
+    <div class="main-container">
+
+        <div id="home-grid" class="grid-menu">
+            <div class="menu-card" onclick="openTool('acronym-tool')">
+                <div class="card-icon"><i class="fa-solid fa-layer-group"></i></div>
+                <div class="card-title">Acronym Architect</div>
+            </div>
+            <div class="menu-card" onclick="openTool('prodict-tool')">
+                <div class="card-icon"><i class="fa-solid fa-book"></i></div>
+                <div class="card-title">ProDictionary</div>
+            </div>
+            <div class="menu-card" onclick="openTool('keyword-tool')">
+                <div class="card-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+                <div class="card-title">SEO Keywords</div>
+            </div>
+            <div class="menu-card" onclick="openTool('snippet-tool')">
+                <div class="card-icon"><i class="fa-solid fa-code"></i></div>
+                <div class="card-title">SEO Snippets</div>
+            </div>
         </div>
 
-        <div class="input-group">
-            <label>Industry / Database</label>
-            <select id="industryInput">
-                <option value="geospatial">Geospatial & GIS</option>
-                <option value="marketing">Marketing & Design</option>
-                <option value="web_dev">Web & Tech</option>
-                <option value="general">General Business</option>
-            </select>
-        </div>
-
-        <div class="input-group">
-            <label>Select Model</label>
-            <select id="modelInput">
-                <option value="corporate">Corporate (Professional)</option>
-                <option value="action">Action (Verbs & Tasks)</option>
-                <option value="tech">Tech Stack (Technical)</option>
-            </select>
-        </div>
-
-        <button class="btn btn-primary" onclick="generateMatrix()">OK</button>
-
-        <div id="results-area">
+        <div id="acronym-tool" class="tool-section">
+            <div class="back-btn" onclick="goHome()"><i class="fa-solid fa-arrow-left"></i> Back</div>
+            <div class="tool-header">Acronym Architect</div>
             
-            <label style="margin-top: 20px;">Word Options Matrix</label>
-            <div class="table-wrapper">
-                <table id="matrixTable">
-                    <tbody id="tableBody"></tbody>
-                </table>
+            <div class="input-group">
+                <label>Letters</label>
+                <input type="text" id="acronymInput" placeholder="e.g. TEAM">
+            </div>
+            <div class="input-group">
+                <label>Industry</label>
+                <select id="industryInput">
+                    <option value="geospatial">Geospatial & GIS</option>
+                    <option value="marketing">Marketing & Design</option>
+                    <option value="web_dev">Web & Tech</option>
+                </select>
+            </div>
+            <button class="btn" onclick="generateAcronym()">Generate Matrix</button>
+
+            <div id="matrix-area" style="display:none">
+                <div class="matrix-container">
+                    <table style="width:100%">
+                        <tbody id="matrixBody"></tbody>
+                    </table>
+                </div>
+                
+                <div class="display-box" id="acronym-display">
+                    <span id="finalSentence">...</span>
+                    <div class="action-icons">
+                        <i class="fa-regular fa-heart icon-btn" onclick="saveFavorite('acronym-display')" title="Save"></i>
+                        <i class="fa-regular fa-copy icon-btn" onclick="copyText('acronym-display')" title="Copy"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="prodict-tool" class="tool-section">
+            <div class="back-btn" onclick="goHome()"><i class="fa-solid fa-arrow-left"></i> Back</div>
+            <div class="tool-header">ProDictionary</div>
+
+            <div class="display-box" id="dict-display">
+                <span id="dict-text" style="font-style: italic; opacity: 0.7;">What would you like to know?</span>
+                <div class="action-icons">
+                    <i class="fa-regular fa-heart icon-btn" onclick="saveFavorite('dict-display')" title="Save"></i>
+                    <i class="fa-regular fa-copy icon-btn" onclick="copyText('dict-display')" title="Copy"></i>
+                </div>
             </div>
 
-            <label>Selected Result</label>
-            <div id="finalSentence" class="sentence-display">
-                ...
+            <div class="input-group" style="margin-top:20px;">
+                <label>Search Term</label>
+                <input type="text" id="dictInput" placeholder="Type a word..." onkeyup="filterDict()">
+                <div id="dictSuggestions" style="border:1px solid #eee; display:none; max-height:150px; overflow-y:auto;"></div>
             </div>
+            <button class="btn" onclick="lookupWord()">Search</button>
+        </div>
 
-            <button class="btn btn-secondary" onclick="autoGenerate()">Auto Generate Variation</button>
+        <div id="keyword-tool" class="tool-section">
+            <div class="back-btn" onclick="goHome()"><i class="fa-solid fa-arrow-left"></i> Back</div>
+            <div class="tool-header">SEO Keyword Generator</div>
+            
+            <div class="input-group">
+                <label>Brand / Topic</label>
+                <input type="text" id="seoTopic" placeholder="e.g. Sustainable Coffee Shop">
+            </div>
+            <button class="btn" onclick="generateAI('keywords')">Generate Keywords</button>
 
+            <div class="display-box" id="key-display">
+                <span id="key-text">Results will appear here...</span>
+                <div class="action-icons">
+                    <i class="fa-regular fa-heart icon-btn" onclick="saveFavorite('key-display')" title="Save"></i>
+                    <i class="fa-regular fa-copy icon-btn" onclick="copyText('key-display')" title="Copy"></i>
+                </div>
+            </div>
+        </div>
+
+        <div id="snippet-tool" class="tool-section">
+            <div class="back-btn" onclick="goHome()"><i class="fa-solid fa-arrow-left"></i> Back</div>
+            <div class="tool-header">SEO Snippet Generator</div>
+            
+            <div class="input-group">
+                <label>Business Description</label>
+                <textarea id="seoDesc" rows="3" placeholder="Describe your business..."></textarea>
+            </div>
+            <button class="btn" onclick="generateAI('snippet')">Generate Meta Description</button>
+
+            <div class="display-box" id="snip-display">
+                <span id="snip-text">Meta description will appear here...</span>
+                <div class="action-icons">
+                    <i class="fa-regular fa-heart icon-btn" onclick="saveFavorite('snip-display')" title="Save"></i>
+                    <i class="fa-regular fa-copy icon-btn" onclick="copyText('snip-display')" title="Copy"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">Saved Favorites</div>
+        <div id="fav-container" class="fav-list">
+            <div style="text-align:center; color:#ccc; font-size:0.9rem;">No favorites saved yet.</div>
+        </div>
+
+        <div class="section-title" style="text-align:center; border:none;">Share App</div>
+        <div class="share-row">
+            <a href="https://www.facebook.com/sharer/sharer.php?u=https://cpraise.github.io" target="_blank" class="social-btn bg-fb"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="https://twitter.com/intent/tweet?text=Check%20out%20Acronym%20Architect!" target="_blank" class="social-btn bg-x"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="https://instagram.com" target="_blank" class="social-btn bg-ig"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://t.me/share/url?url=https://cpraise.github.io" target="_blank" class="social-btn bg-tg"><i class="fa-brands fa-telegram"></i></a>
+            <div class="social-btn bg-cp" onclick="copyLink()"><i class="fa-solid fa-link"></i></div>
         </div>
 
     </div>
 
     <footer>
-        <a href="https://webbuddy.example.com" target="_blank">Powered by Webbuddy</a>
+        <a href="https://webbuddy.example.com">Powered by Webbuddy</a>
     </footer>
 
     <script>
-        // Toggle Sidebar
-        function toggleMenu() {
-            document.getElementById('sidebar').classList.toggle('active');
-        }
+        // --- CONFIGURATION ---
+        // ⚠️ WARNING: SECURITY RISK. Putting keys in frontend code exposes them to the public.
+        const _SECRET_KEY = "PUT_YOUR_OPENAI_KEY_HERE"; // <-- PASTE KEY HERE
 
-        // --- CORE LOGIC ---
-        
-        // 1. Load Database
+        // --- DATABASE LOAD ---
         let proDictionary = {};
-        
         window.onload = async function() {
+            loadFavorites();
             try {
-                // Ensure your GitHub repo has a file named 'pro-dictionary.json'
-                const response = await fetch('https://cpraise.github.io/ProDict-Database/prodict-database.json');
-                if(response.ok) {
-                    proDictionary = await response.json();
-                    console.log("DB Loaded");
-                } else {
-                    console.warn("DB not found, using fallback mode.");
-                }
-            } catch (e) {
-                console.error("Network error loading DB");
-            }
+                const res = await fetch('https://cpraise.github.io/ProDict-Database/ProDict-Database.json');
+                if(res.ok) proDictionary = await res.json();
+            } catch(e) { console.log("DB Load Error"); }
         };
 
-        // Global State
-        let currentAcronym = [];
-        let currentSentence = [];
-        let currentOptions = []; // Stores the available words for each letter
+        // --- NAVIGATION ---
+        function openTool(toolId) {
+            document.getElementById('home-grid').style.display = 'none';
+            document.querySelectorAll('.tool-section').forEach(el => el.style.display = 'none');
+            document.getElementById(toolId).style.display = 'block';
+        }
 
-        // 2. The "OK" Button Logic
-        async function generateMatrix() {
+        function goHome() {
+            document.querySelectorAll('.tool-section').forEach(el => el.style.display = 'none');
+            document.getElementById('home-grid').style.display = 'grid';
+        }
+
+        // --- TOOL 1: ACRONYM ---
+        async function generateAcronym() {
             const input = document.getElementById('acronymInput').value.toUpperCase().replace(/[^A-Z]/g, '');
             const topic = document.getElementById('industryInput').value;
-            const model = document.getElementById('modelInput').value;
-
-            if(!input) { alert("Please type in letters."); return; }
-
-            // Show Interface
-            document.getElementById('results-area').style.display = 'block';
-            const tableBody = document.getElementById('tableBody');
-            tableBody.innerHTML = '';
+            const matrixArea = document.getElementById('matrix-area');
+            const tbody = document.getElementById('matrixBody');
             
-            currentAcronym = input.split('');
-            currentSentence = new Array(currentAcronym.length).fill("...");
-            currentOptions = []; // Reset options
+            if(!input) return;
+            matrixArea.style.display = 'block';
+            tbody.innerHTML = '';
+            
+            let sentence = new Array(input.length).fill('...');
+            
+            for(let i=0; i<input.length; i++) {
+                let letter = input[i];
+                let row = document.createElement('tr');
+                row.innerHTML = `<td style="font-weight:bold; color:var(--primary)">${letter}</td><td id="mcell-${i}">...</td>`;
+                tbody.appendChild(row);
 
-            // Grammar Rules
-            let pattern = [];
-            if (model === 'corporate') pattern = ['adj', 'n', 'v', 'adj', 'n', 'n'];
-            else if (model === 'action') pattern = ['v', 'n', 'v', 'n', 'v', 'n'];
-            else pattern = ['n', 'n', 'n', 'adj', 'n', 'n'];
+                // Fetch words (DB or API)
+                let words = [];
+                if(proDictionary[topic] && proDictionary[topic][letter]) {
+                    words = proDictionary[topic][letter].map(item => item.w);
+                }
+                // Fallback API
+                if(words.length < 5) {
+                    try {
+                        const res = await fetch(`https://api.datamuse.com/words?sp=${letter}*&topics=${topic}&max=5`);
+                        const data = await res.json();
+                        data.forEach(d => words.push(d.word.charAt(0).toUpperCase() + d.word.slice(1)));
+                    } catch(e){}
+                }
 
-            // Loop through letters
-            for (let i = 0; i < currentAcronym.length; i++) {
-                const letter = currentAcronym[i];
-                const pos = pattern[i % pattern.length];
-                
-                // Create UI Row
-                const row = document.createElement('tr');
-                row.innerHTML = `<td class="letter-col">${letter}</td><td id="cell-${i}">Loading...</td>`;
-                tableBody.appendChild(row);
-
-                // Fetch Words (Strategy: Dict -> API)
-                let words = await fetchWords(letter, topic, pos);
-                currentOptions[i] = words; // Save for auto-generate
-                
                 // Render Chips
-                renderChips(i, words);
+                const cell = document.getElementById(`mcell-${i}`);
+                cell.innerHTML = '';
+                words.slice(0,6).forEach(w => {
+                    let chip = document.createElement('span');
+                    chip.className = 'word-chip';
+                    chip.innerText = w;
+                    chip.onclick = () => {
+                        sentence[i] = w;
+                        document.getElementById('finalSentence').innerText = sentence.join(' ');
+                        Array.from(cell.children).forEach(c => c.classList.remove('selected'));
+                        chip.classList.add('selected');
+                    };
+                    cell.appendChild(chip);
+                });
                 
-                // Pick initial word
-                selectWord(i, words[0] || "???");
-            }
-        }
-
-        // 3. Data Fetching Logic
-        async function fetchWords(letter, topic, pos) {
-            let words = [];
-
-            // A. Check ProDictionary
-            if (proDictionary[topic] && proDictionary[topic][letter]) {
-                words = [...proDictionary[topic][letter]];
-            }
-
-            // B. Check Datamuse API (Fill gaps)
-            if (words.length < 5) {
-                try {
-                    const res = await fetch(`https://api.datamuse.com/words?sp=${letter}*&topics=${topic}&md=p&max=8`);
-                    const data = await res.json();
-                    data.forEach(item => {
-                        // Filter by grammar (optional, but good for quality)
-                        if(!words.includes(capitalize(item.word))) {
-                             words.push(capitalize(item.word));
-                        }
-                    });
-                } catch(e) { console.log("API Fail"); }
-            }
-
-            // Fallback
-            if (words.length === 0) words = ["Word..."];
-            return words;
-        }
-
-        // 4. Render Logic
-        function renderChips(index, wordList) {
-            const cell = document.getElementById(`cell-${index}`);
-            cell.innerHTML = '';
-            
-            wordList.slice(0, 8).forEach(word => {
-                const chip = document.createElement('span');
-                chip.className = 'word-chip';
-                chip.innerText = word;
-                chip.onclick = () => selectWord(index, word);
-                cell.appendChild(chip);
-            });
-        }
-
-        // 5. Interaction Logic
-        function selectWord(index, word) {
-            currentSentence[index] = word;
-            
-            // Highlight Visuals
-            const cell = document.getElementById(`cell-${index}`);
-            Array.from(cell.children).forEach(c => {
-                c.classList.remove('selected');
-                if(c.innerText === word) c.classList.add('selected');
-            });
-
-            // Update Display
-            document.getElementById('finalSentence').innerText = currentSentence.join(' ');
-        }
-
-        // 6. Auto Generate Button
-        function autoGenerate() {
-            // Randomly pick words from the existing options
-            for(let i=0; i<currentAcronym.length; i++) {
-                if(currentOptions[i] && currentOptions[i].length > 0) {
-                    const randomWord = currentOptions[i][Math.floor(Math.random() * currentOptions[i].length)];
-                    selectWord(i, randomWord);
+                // Select first by default
+                if(words[0]) {
+                    sentence[i] = words[0];
+                    cell.children[0].classList.add('selected');
                 }
             }
+            document.getElementById('finalSentence').innerText = sentence.join(' ');
         }
 
-        function capitalize(str) {
-            return str.charAt(0).toUpperCase() + str.slice(1);
+        // --- TOOL 2: PRO DICT ---
+        function filterDict() {
+            const val = document.getElementById('dictInput').value.toLowerCase();
+            const box = document.getElementById('dictSuggestions');
+            if(val.length < 1) { box.style.display = 'none'; return; }
+            
+            let matches = [];
+            Object.keys(proDictionary).forEach(topic => {
+                Object.keys(proDictionary[topic]).forEach(ltr => {
+                    proDictionary[topic][ltr].forEach(entry => {
+                        if(entry.w.toLowerCase().startsWith(val)) matches.push(entry);
+                    });
+                });
+            });
+
+            box.innerHTML = '';
+            matches.slice(0,5).forEach(m => {
+                let div = document.createElement('div');
+                div.style.padding = '8px'; div.style.cursor = 'pointer';
+                div.innerText = m.w;
+                div.onclick = () => {
+                    document.getElementById('dictInput').value = m.w;
+                    document.getElementById('dict-text').innerHTML = `<strong>${m.w}</strong><br>${m.d}`;
+                    box.style.display = 'none';
+                };
+                box.appendChild(div);
+            });
+            box.style.display = matches.length > 0 ? 'block' : 'none';
         }
 
+        function lookupWord() {
+            // Triggered by button if user didn't click suggestion
+            // For MVP, we assume user selects suggestion.
+        }
+
+        // --- TOOLS 3 & 4: AI SEO (KEYWORDS & SNIPPETS) ---
+        async function generateAI(type) {
+            const displayId = type === 'keywords' ? 'key-text' : 'snip-text';
+            const displayEl = document.getElementById(displayId);
+            
+            let prompt = "";
+            if(type === 'keywords') {
+                const topic = document.getElementById('seoTopic').value;
+                if(!topic) return alert("Enter a topic!");
+                prompt = `List 8 high-value SEO keywords for: "${topic}". Comma separated.`;
+            } else {
+                const desc = document.getElementById('seoDesc').value;
+                if(!desc) return alert("Enter description!");
+                prompt = `Write a Google SEO meta description (max 160 chars) for: "${desc}"`;
+            }
+
+            displayEl.innerText = "AI is thinking...";
+
+            try {
+                const res = await fetch("https://api.openai.com/v1/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${_SECRET_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: "gpt-3.5-turbo",
+                        messages: [{role: "user", content: prompt}]
+                    })
+                });
+                const data = await res.json();
+                if(data.error) {
+                    displayEl.innerText = "Error: Check API Key.";
+                } else {
+                    displayEl.innerText = data.choices[0].message.content;
+                }
+            } catch(e) {
+                displayEl.innerText = "Connection Error.";
+            }
+        }
+
+        // --- FAVORITES SYSTEM ---
+        function saveFavorite(elementId) {
+            const text = document.getElementById(elementId).innerText; // Grab text, ignore icons
+            // The innerText includes the definition + text, we need to clean it slightly
+            // Ideally we grab specific span IDs, but grabbing container text works for MVP
+            if(!text || text.includes("...")) return;
+            
+            let favs = JSON.parse(localStorage.getItem('aa_favs') || "[]");
+            favs.push(text);
+            localStorage.setItem('aa_favs', JSON.stringify(favs));
+            loadFavorites();
+            alert("Saved to Favorites!");
+        }
+
+        function loadFavorites() {
+            let favs = JSON.parse(localStorage.getItem('aa_favs') || "[]");
+            const container = document.getElementById('fav-container');
+            container.innerHTML = '';
+            
+            if(favs.length === 0) {
+                container.innerHTML = '<div style="text-align:center; color:#ccc;">No favorites saved yet.</div>';
+                return;
+            }
+
+            favs.forEach((txt, idx) => {
+                let div = document.createElement('div');
+                div.className = 'fav-item';
+                div.innerHTML = `
+                    <div class="fav-text">${txt.substring(0, 50)}...</div>
+                    <i class="fa-solid fa-trash delete-btn" onclick="deleteFav(${idx})"></i>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function deleteFav(index) {
+            let favs = JSON.parse(localStorage.getItem('aa_favs') || "[]");
+            favs.splice(index, 1);
+            localStorage.setItem('aa_favs', JSON.stringify(favs));
+            loadFavorites();
+        }
+
+        // --- UTILS ---
+        function copyText(elementId) {
+            // Get text only, excluding icon buttons
+            const container = document.getElementById(elementId);
+            const text = container.innerText; 
+            navigator.clipboard.writeText(text);
+            alert("Copied to clipboard!");
+        }
+
+        function copyLink() {
+            navigator.clipboard.writeText("https://cpraise.github.io");
+            alert("App link copied!");
+        }
     </script>
 </body>
 </html>
