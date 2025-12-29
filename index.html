@@ -354,7 +354,7 @@
         window.onload = async function() {
             try {
                 // Ensure your GitHub repo has a file named 'pro-dictionary.json'
-                const response = await fetch('https://cpraise.github.io/ProDict-Database/pro-dictionary.json');
+                const response = await fetch('https://cpraise.github.io/ProDict-Database/prodict-database.json');
                 if(response.ok) {
                     proDictionary = await response.json();
                     console.log("DB Loaded");
